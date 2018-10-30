@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     private TextView longitudeField;
     private TextView speedField;
     private Button showMap;
+    private double latitude, longitude;
 
     LocationManager locationManager;
     String provider;
@@ -35,47 +36,36 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        latituteField = (TextView) findViewById(R.id.latitude_value);
-        longitudeField = (TextView) findViewById(R.id.longitude_value);
-        speedField = (TextView) findViewById(R.id.speed_value);
-        showMap = (Button)findViewById(R.id.button_showMap);
-        showMap.setOnClickListener(this);
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+        initViews();
+        initListeners();
+        initObjects();
+        findLocation();
+    }
 
-        // Get the location manager
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // Define the criteria how to select the locatioin provider -> use
-        // default
-        Criteria criteria = new Criteria();
-
-        provider = locationManager.getBestProvider(criteria, false);
-        Toast.makeText(getBaseContext(), provider, Toast.LENGTH_SHORT).show();
-
+    private void findLocation() {
         if (provider != null && !provider.equals("")) {
-            /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }*/
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 //Requesting the Location permission
                 ActivityCompat.requestPermissions(this, new String[]{
                         android.Manifest.permission.ACCESS_FINE_LOCATION
                 }, 101);
                 return;
             }
+
             locationManager.requestLocationUpdates(provider, 400, 1, this);
+
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     // Do something after 5s = 5000ms
-                    if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                            && ActivityCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                         return;
                     }
+
                     Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
                     //Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                     //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 400, 1, this);
@@ -94,6 +84,33 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
             }, 5000);
 
         }
+    }
+
+    private void initObjects() {
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
+        // Get the location manager
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // Define the criteria how to select the locatioin provider -> use default
+        Criteria criteria = new Criteria();
+
+        provider = locationManager.getBestProvider(criteria, false);
+        Toast.makeText(getBaseContext(), provider, Toast.LENGTH_SHORT).show();
+    }
+
+    private void initListeners() {
+        showMap.setOnClickListener(this);
+    }
+
+    private void initViews() {
+        latituteField = (TextView) findViewById(R.id.latitude_value);
+        longitudeField = (TextView) findViewById(R.id.longitude_value);
+        speedField = (TextView) findViewById(R.id.speed_value);
+        showMap = (Button)findViewById(R.id.button_showMap);
     }
 
     public void onStart() {
@@ -138,7 +155,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     @Override
     public void onLocationChanged(Location location) {
         longitudeField.setText(String.valueOf(location.getLongitude()));
+        longitude = location.getLongitude();
         latituteField.setText(String.valueOf(location.getLatitude()));
+        latitude = location.getLatitude();
         speedField.setText(String.valueOf(location.getSpeed()));
     }
 
@@ -169,7 +188,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     @Override
     public void onClick(View v) {
-        Intent intentRegister = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intentRegister = new Intent(getApplicationContext(), MapsActivity.class);
+        intentRegister.putExtra("longitude",longitude);
+        intentRegister.putExtra("latitude", latitude);
         startActivity(intentRegister);
 
     }
