@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GPSlocation">
+
+    <TextView
+        android:id="@+id/latitude_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="51dp"
+        android:layout_marginStart="51dp"
+        android:layout_marginTop="227dp"
+        android:text="Latitude : "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/longitude_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Longitude :"
+        app:layout_constraintStart_toStartOf="@+id/latitude_text"
+        app:layout_constraintTop_toBottomOf="@+id/latitude_text" />
+
+    <TextView
+        android:id="@+id/latitude_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@+id/latitude_text"
+        app:layout_constraintStart_toStartOf="@+id/longitude_value" />
+
+    <TextView
+        android:id="@+id/longitude_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="19dp"
+        android:layout_marginStart="19dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/longitude_text"
+        app:layout_constraintStart_toEndOf="@+id/longitude_text" />
+
+    <TextView
+        android:id="@+id/speed_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="Speed :"
+        app:layout_constraintStart_toStartOf="@+id/longitude_text"
+        app:layout_constraintTop_toBottomOf="@+id/longitude_text" />
+
+    <TextView
+        android:id="@+id/speed_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="@+id/longitude_value"
+        app:layout_constraintTop_toBottomOf="@+id/longitude_value" />
+
+    <Button
+        android:id="@+id/button_showMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="68dp"
+        android:text="Show on Map"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="131dp" />
+</android.support.constraint.ConstraintLayout>
